@@ -1,20 +1,28 @@
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-
 import styles from './IconButton.module.scss';
 
-const IconButton = ({ children, onClick, ...allyProps }) => (
-  <button
-    type="button"
-    className={styles.IconButton}
-    onClick={onClick}
-    {...allyProps}
-  >
-    {children}
-  </button>
-);
+const IconButton = ({ children, onClick, ...allyProps }) => {
+  const handleClick = useCallback(() => {
+    if (onClick) {
+      onClick();
+    }
+  }, [onClick]);
+
+  return (
+    <button
+      type="button"
+      className={styles.IconButton}
+      onClick={handleClick}
+      {...allyProps}
+    >
+      {children}
+    </button>
+  );
+};
 
 IconButton.defaultProps = {
-  onClick: () => null,
+  onClick: null,
   children: null,
 };
 
