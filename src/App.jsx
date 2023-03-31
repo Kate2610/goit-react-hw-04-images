@@ -17,10 +17,26 @@ function App() {
   const [largeImage, setLargeImage] = useState('');
   const [error, setError] = useState(null);
 
+  const getImages = async () => {
+    setIsLoading(true);
+
+    try {
+      const { hits } = await fetchImages(searchQuery, currentPage);
+
+      setImages((prevImages) => [...prevImages, ...hits]);
+      setCurrentPage((prevCurrentPage) => prevCurrentPage + 1);
+    } catch (error) {
+      console.log('Smth wrong with App fetch', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (searchQuery) {
       getImages();
-    }
+    } // eslint-disable-next-line
   }, [searchQuery]);
 
   useEffect(() => {
@@ -37,22 +53,6 @@ function App() {
     setShowModal(false);
     setLargeImage('');
     setError(null);
-  };
-
-  const getImages = async () => {
-    setIsLoading(true);
-
-    try {
-      const { hits } = await fetchImages(searchQuery, currentPage);
-
-      setImages((prevImages) => [...prevImages, ...hits]);
-      setCurrentPage((prevCurrentPage) => prevCurrentPage + 1);
-    } catch (error) {
-      console.log('Smth wrong with App fetch', error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleGalleryItem = (fullImageUrl) => {
